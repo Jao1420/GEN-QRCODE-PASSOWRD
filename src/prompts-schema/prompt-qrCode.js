@@ -8,7 +8,7 @@ const promptQRCode=[
     },
     {
         name: "type",
-        description: chalk.magentaBright("Escolha o tipo de QR Code (1) imagem ou (2) Saida no Terminal:"),
+        description: chalk.greenBright("Escolha o tipo de QR Code (1) imagem ou (2) Saida no Terminal:"),
         pattern: /^[1-2]$/,
         message: chalk.redBright.italic("Escolha inválida. Digite 1 ou 2."),
         required: true
