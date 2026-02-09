@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>QR Code Funcional</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.4.4/qrcode.js"
+        integrity="sha512-oxrVyBhqnzQ0BzuM0A/6dEIk0alz0p4SpDRaWvtuUoarIc8rnL5lVniHG5Dp21MRFojcQcmKHjaskNXhSaUPPw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        #placeHolder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+
+        #generateBtn {
+            margin-top: 20px;
+        }
+
+        #qrCodeImage {
+            margin-top: 20px;
+            flex-direction: column;
+            align-items: center;
+            /* text-align: center; */
+        }
+
+        #CopySection {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div id="placeHolder">
+            <strong>
+                <h2>QR Code gerado via CDN</h2>
+            </strong>
+            <input type="text" id="qrCodeUrl" placeholder="escreva o contenido">
+            <button type="button" id="generateBtn">Gerar QR Code</button>
+            <img id="qrCodeImage">
+        </div>
+        <div id="CopySection">
+            <button id="downloadBtn">Copiar QR Code</button>
+        </div>
+    </div>
+
+    <script>
+        const input = document.getElementById("qrCodeUrl");
+        const button = document.getElementById("generateBtn");
+        const qrCodeImage = document.getElementById("qrCodeImage");
+
+        button.addEventListener("click", async () => {
+            const dataUrl = await QRCode.toDataURL(input.value);
+            qrCodeImage.src = dataUrl
+        });
+
+        const downloadBtn = document.getElementById("downloadBtn");
+        downloadBtn.addEventListener("click", async () => {
+            try {
+                //  Pega o data URL da imagem
+                const dataUrl = qrCodeImage.src;
+
+                // Converte data URL para Blob
+                const response = await fetch(dataUrl);
+                const blob = await response.blob();
+
+                // Escreve no clipboard como imagem
+                await navigator.clipboard.write([
+                    new ClipboardItem({
+                        [blob.type]: blob
+                    })
+                ]);
+                alert("Imagem copiada para a área de transferência!");
+            } catch (err) {
+                console.error("Erro ao copiar imagem:", err);
+                alert("Não foi possível copiar a imagem. Tente baixar em vez disso.");
+            }
+        });
+
+        //caso fosse necessário fazer o download ao invés de copiar
+        // downloadBtn.addEventListener("click", () => {
+        //     const link = document.createElement("a");
+        //     link.href = qrCodeImage.src;
+        //     link.download = "qr-code.png";
+        //     link.click();
+        // });
+    </script>
+</body>
+
+</html>
